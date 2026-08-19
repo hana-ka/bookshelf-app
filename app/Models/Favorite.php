@@ -15,12 +15,12 @@ class Favorite extends Model
         'book_id',
     ];
 
-    public function user() :BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function book() :BelongsTo
+    public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
     }
