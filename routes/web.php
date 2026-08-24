@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('books.index');
 });
+
+Route::get('/books/create', function () {
+    return '仮の画面';
+})->name('books.create');
