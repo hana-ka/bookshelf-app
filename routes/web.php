@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,12 +30,9 @@ Route::post('/books',
     ->middleware('auth')
     ->name('books.store');
 
-
-
-// TODO: 仮ルート（お気に入り機能実装時にControllerへ変更）
-Route::post('/books/{book}/favorites', function () {
-    //
-})->middleware('auth')->name('favorites.toggle');
+Route::post('/books/{book}/favorites',[FavoriteController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('favorites.toggle');
 
 // TODO: 仮ルート（レビュー投稿機能実装時にControllerへ変更）
 Route::post('/books/{book}/reviews', function () {
