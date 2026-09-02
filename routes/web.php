@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewLikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +40,9 @@ Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
     ->middleware('auth')
     ->name('reviews.store');
 
-// TODO: 仮ルート（レビューいいね機能実装時にControllerへ変更）
-Route::post('/reviews/{review}/like', function () {
-    //
-})->middleware('auth')->name('reviews.like');
+Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('reviews.like');
 
 // TODO: 仮ルート（機能実装時にControllerへ変更）
 Route::get('/ranking', function () {
