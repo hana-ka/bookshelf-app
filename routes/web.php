@@ -44,6 +44,19 @@ Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
     ->middleware('auth')
     ->name('reviews.like');
 
+Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])
+    ->middleware('auth')
+    ->name('reviews.edit');
+
+Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('reviews.destroy');
+
+// TODO: レビュー更新機能
+Route::put('/reviews/{review}', [ReviewController::class, 'update'])
+    ->middleware('auth')
+    ->name('reviews.update');
+
 // TODO: 仮ルート（機能実装時にControllerへ変更）
 Route::get('/ranking', function () {
     return 'ランキング';
