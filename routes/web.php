@@ -52,10 +52,23 @@ Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
     ->middleware('auth')
     ->name('reviews.destroy');
 
+Route::get('/books/{book}/edit', [BookController::class, 'edit'])
+    ->middleware('auth')
+    ->name('books.edit');
+
+Route::delete('/books/{book}', [BookController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('books.destroy');
+
 // TODO: レビュー更新機能
 Route::put('/reviews/{review}', [ReviewController::class, 'update'])
     ->middleware('auth')
     ->name('reviews.update');
+
+// TODO:　書籍更新機能
+Route::put('/books/{book}', [BookController::class, 'update'])
+    ->middleware('auth')
+    ->name('books.update');
 
 // TODO: 仮ルート（機能実装時にControllerへ変更）
 Route::get('/ranking', function () {

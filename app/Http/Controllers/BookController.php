@@ -55,9 +55,13 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        $this->authorize('update', $book);
+
+        $genres = Genre::all();
+
+        return view('books.edit', compact('book', 'genres'));
     }
 
     /**
@@ -71,8 +75,12 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book)
     {
-        //
+        $this->authorize('delete', $book);
+
+        $book->delete();
+
+        return redirect()->route('books.index');
     }
 }
