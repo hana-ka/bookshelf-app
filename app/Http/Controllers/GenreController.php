@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Genre;
+use App\Http\Requests\GenreRequest;
 
 class GenreController extends Controller
 {
@@ -19,10 +20,13 @@ class GenreController extends Controller
         return view('genres.create');
     }
 
-    // TODO: ジャンル登録機能
-    public function store(Request $request)
+    public function store(GenreRequest $request)
     {
-        //
+        Genre::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('genres.index');
     }
 
     public function show(Genre $genre)
@@ -32,21 +36,30 @@ class GenreController extends Controller
         return view('genres.show', compact('genre','books'));
     }
 
-    // TODO: ジャンル編集画面
     public function edit(Genre $genre)
     {
         return view('genres.edit', compact('genre'));
     }
 
-    // TODO: ジャンル編集機能
-    public function update(Request $request)
+    public function update(GenreRequest $request, Genre $genre)
     {
-        //
+        $genre->update([
+            'name' =>$request->name,
+        ]);
+
+        return redirect()->route('genres.index');
     }
 
-    // TODO: ジャンル削除
     public function destroy(Genre $genre)
     {
-        //
+        if($genre->books()->exists()){
+            return redirect()->route('genres.index')
+                ->with('error', '書籍が紐付いているジャンルは削除できません。');
+        }
+
+        $genre->delete();
+
+        return redirect()->route('genres.index')
+            ->with('success', 'ジャンルを削除しました。');
     }
 }

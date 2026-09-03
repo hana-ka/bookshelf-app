@@ -89,7 +89,6 @@ Route::get('/genres/create', [GenreController::class, 'create'])
     ->middleware('auth')
     ->name('genres.create');
 
-// TODO: ジャンル登録機能
 Route::post('/genres', [GenreController::class, 'store'])
     ->middleware('auth')
     ->name('genres.store');
@@ -102,7 +101,6 @@ Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])
     ->middleware('auth')
     ->name('genres.edit');
 
-// TODO: ジャンル編集機能
 Route::put('/genres/{genre}', [GenreController::class, 'update'])
     ->middleware('auth')
     ->name('genres.update');
