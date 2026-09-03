@@ -63,7 +63,6 @@ Route::delete('/books/{book}', [BookController::class, 'destroy'])
 Route::post('/books', [BookController::class, 'store'])
     ->name('books.store');
 
-// TODO: レビュー更新機能
 Route::put('/reviews/{review}', [ReviewController::class, 'update'])
     ->middleware('auth')
     ->name('reviews.update');
