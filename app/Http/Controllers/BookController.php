@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -33,9 +35,22 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $book = $user->books()->create([
+            'title' =>$request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'image_url' => $request->image_url,
+        ]);
+
+        $book->genres()->sync($request->genres);
+
+        return redirect()->route('books.show', $book);
     }
 
     /**
