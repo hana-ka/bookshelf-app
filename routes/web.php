@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
+use App\Http\Controllers\GenreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,31 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
     ->middleware('auth')
     ->name('favorites.index');
 
-Route::get('/genres', function () {
-    return 'ジャンル管理';
-})->name('genres.index');
+Route::get('/genres', [GenreController::class, 'index'])
+    ->middleware('auth')
+    ->name('genres.index');
+
+Route::get('/genres/create', [GenreController::class, 'create'])
+    ->middleware('auth')
+    ->name('genres.create');
+
+Route::post('/genres', [GenreController::class, 'store'])
+    ->middleware('auth')
+    ->name('genres.store');
+
+Route::get('/genres/{genre}', [GenreController::class, 'show'])
+    ->middleware('auth')
+    ->name('genres.show');
+
+Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])
+    ->middleware('auth')
+    ->name('genres.edit');
+
+Route::put('/genres/{genre}', [GenreController::class, 'update'])
+    ->middleware('auth')
+    ->name('genres.update');
+
+// TODO: ジャンル削除
+Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('genres.destroy');
