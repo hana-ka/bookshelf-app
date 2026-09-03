@@ -6,6 +6,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\RankingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,9 +74,8 @@ Route::put('/books/{book}', [BookController::class, 'update'])
     ->name('books.update');
 
 // TODO: 仮ルート（機能実装時にControllerへ変更）
-Route::get('/ranking', function () {
-    return 'ランキング';
-})->name('ranking.index');
+Route::get('/ranking', [RankingController::class, 'index'])
+    ->name('ranking.index');
 
 Route::get('/favorites', [FavoriteController::class, 'index'])
     ->middleware('auth')
@@ -105,7 +105,6 @@ Route::put('/genres/{genre}', [GenreController::class, 'update'])
     ->middleware('auth')
     ->name('genres.update');
 
-// TODO: ジャンル削除
 Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
     ->middleware('auth')
     ->name('genres.destroy');
