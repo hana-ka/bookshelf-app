@@ -68,7 +68,6 @@ Route::put('/reviews/{review}', [ReviewController::class, 'update'])
     ->middleware('auth')
     ->name('reviews.update');
 
-// TODO:　書籍更新機能
 Route::put('/books/{book}', [BookController::class, 'update'])
     ->middleware('auth')
     ->name('books.update');

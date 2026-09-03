@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BookRequest extends FormRequest
 {
@@ -34,8 +35,8 @@ class BookRequest extends FormRequest
             ],
             'isbn' =>[
                 'required',
-                'unique:books,isbn',
                 'digits:13',
+                Rule::unique('books', 'isbn')->ignore($this->book),
             ],
             'published_date' =>[
                 'required',

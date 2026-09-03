@@ -82,9 +82,22 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BookRequest $request, Book $book)
     {
-        //
+        $this->authorize('update', $book);
+
+        $book->update([
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'image_url' => $request->image_url,
+        ]);
+
+        $book->genres()->sync($request->genres);
+
+        return redirect()->route('books.show', $book);
     }
 
     /**
