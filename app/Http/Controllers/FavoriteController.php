@@ -20,4 +20,13 @@ class FavoriteController extends Controller
 
         return redirect()->route('books.show', $book);
     }
+
+    public function index()
+    {
+        $user = Auth::user();
+
+        $books = $user->favoriteBooks()->paginate(10);
+
+        return view('favorites.index', compact('books'));
+    }
 }

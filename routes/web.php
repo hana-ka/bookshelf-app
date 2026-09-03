@@ -76,9 +76,9 @@ Route::get('/ranking', function () {
     return 'ランキング';
 })->name('ranking.index');
 
-Route::get('/favorites', function () {
-    return 'お気に入り';
-})->name('favorites.index');
+Route::get('/favorites', [FavoriteController::class, 'index'])
+    ->middleware('auth')
+    ->name('favorites.index');
 
 Route::get('/genres', function () {
     return 'ジャンル管理';
