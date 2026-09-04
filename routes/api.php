@@ -28,3 +28,6 @@ Route::post('/v1/books', [BookController::class, 'store'])
 
 Route::put('/v1/books/{book}', [BookController::class, 'update'])
     ->middleware('auth:sanctum');
+
+Route::delete('/v1/books/{book}', [BookController::class, 'destroy'])
+    ->middleware('auth:sanctum');
