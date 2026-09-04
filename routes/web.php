@@ -73,7 +73,6 @@ Route::put('/books/{book}', [BookController::class, 'update'])
     ->middleware('auth')
     ->name('books.update');
 
-// TODO: 仮ルート（機能実装時にControllerへ変更）
 Route::get('/ranking', [RankingController::class, 'index'])
     ->name('ranking.index');
 
