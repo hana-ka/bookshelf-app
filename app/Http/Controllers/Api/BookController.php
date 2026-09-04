@@ -65,4 +65,21 @@ class BookController extends Controller
             ->response()
             ->setStatusCode(201);
     }
+
+    public function update(BookRequest $request, Book $book)
+    {
+        $book->update([
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'image_url' => $request->image_url,
+        ]);
+
+        $book->genres()->sync($request->genres);
+
+        return new BookResource($book);
+
+    }
 }

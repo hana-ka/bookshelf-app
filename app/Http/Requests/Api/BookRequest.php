@@ -36,7 +36,7 @@ class BookRequest extends FormRequest
             'isbn' =>[
                 'required',
                 'digits:13',
-                Rule::unique('books', 'isbn'),
+                Rule::unique('books', 'isbn')->ignore($this->book),
             ],
             'published_date' =>[
                 'required',
