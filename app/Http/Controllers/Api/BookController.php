@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\BookDetailResource;
 
 class BookController extends Controller
 {
@@ -30,5 +31,15 @@ class BookController extends Controller
         $books = $query->paginate(10);
 
         return BookResource::collection($books);
+    }
+
+    public function show(Book $book)
+    {
+        $book->load([
+            'genres',
+            'reviews.user',
+        ]);
+
+        return new BookDetailResource($book);
     }
 }
