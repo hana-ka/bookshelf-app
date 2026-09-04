@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Http\Resources\BookResource;
 use App\Http\Resources\BookDetailResource;
+use App\Http\Requests\Api\BookRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class BookController extends Controller
 {
@@ -41,5 +44,25 @@ class BookController extends Controller
         ]);
 
         return new BookDetailResource($book);
+    }
+
+    public function store(BookRequest $request)
+    {
+        $user = Auth::user();
+
+        $book = $user->books()->create([
+            'title' =>$request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'image_url' => $request->image_url,
+        ]);
+
+        $book->genres()->sync($request->genres);
+
+        return (new BookResource($book))
+            ->response()
+            ->setStatusCode(201);
     }
 }
