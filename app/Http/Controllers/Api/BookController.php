@@ -31,7 +31,7 @@ class BookController extends Controller
             });
         }
 
-        $books = $query->paginate(10);
+        $books = $query->paginate(20);
 
         return BookResource::collection($books);
     }
