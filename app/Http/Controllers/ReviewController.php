@@ -19,7 +19,7 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('books.show', $book);
+        return redirect()->route('books.show', $book) ->with('success', 'レビューを投稿しました。');
     }
 
     public function edit(Review $review)
@@ -35,7 +35,7 @@ class ReviewController extends Controller
 
         $review->delete();
 
-        return redirect()->route('books.show', $review->book);
+        return redirect()->route('books.show', $review->book)->with('success', 'レビューを削除しました。');
     }
 
     public function update(ReviewRequest $request, Review $review)
@@ -47,7 +47,7 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('books.show', $review->book);
+        return redirect()->route('books.show', $review->book)->with('success', 'レビューを更新しました。');
 
     }
 }
