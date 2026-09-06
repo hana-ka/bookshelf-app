@@ -26,7 +26,7 @@ class GenreController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('genres.index');
+        return redirect()->route('genres.index')->with('success', 'ジャンルを作成しました。');
     }
 
     public function show(Genre $genre)
@@ -47,7 +47,7 @@ class GenreController extends Controller
             'name' =>$request->name,
         ]);
 
-        return redirect()->route('genres.index');
+        return redirect()->route('genres.index')->with('success', 'ジャンルを更新しました。');
     }
 
     public function destroy(Genre $genre)
