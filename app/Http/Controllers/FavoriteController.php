@@ -12,10 +12,10 @@ class FavoriteController extends Controller
     {
         $user = Auth::user();
 
-        if($user->favoriteBooks->contains($book->id)){
+        if ($user->favoriteBooks()->where('books.id', $book->id)->exists()) {
             $user->favoriteBooks()->detach($book->id);
-        }else{
-                $user->favoriteBooks()->attach($book->id);
+        } else {
+            $user->favoriteBooks()->attach($book->id);
         }
 
         return redirect()->route('books.show', $book);
