@@ -104,3 +104,14 @@ Route::put('/genres/{genre}', [GenreController::class, 'update'])
 Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
     ->middleware('auth')
     ->name('genres.destroy');
+
+//仮
+Route::get('/reports', [BookController::class, 'index'])
+    ->middleware('auth')
+    ->name('reports.index');
+
+Route::get('/reading-plans', [BookController::class, 'index'])
+    ->middleware('auth')
+    ->name('reading-plans.index');
+
+
