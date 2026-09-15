@@ -105,6 +105,9 @@ Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
     ->middleware('auth')
     ->name('genres.destroy');
 
+Route::get('/books/isbn/{isbn}', [BookController::class, 'isbn']);
+
+
 //仮
 Route::get('/reports', [BookController::class, 'index'])
     ->middleware('auth')
@@ -114,4 +117,10 @@ Route::get('/reading-plans', [BookController::class, 'index'])
     ->middleware('auth')
     ->name('reading-plans.index');
 
+Route::get('/notifications', [BookController::class, 'index'])
+    ->middleware('auth')
+    ->name('notifications.index');
 
+Route::get('/reading-plans', [BookController::class, 'index'])
+    ->middleware('auth')
+    ->name('reading-plans.index');
