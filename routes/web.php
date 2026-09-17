@@ -7,6 +7,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,12 +108,12 @@ Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
 
 Route::get('/books/isbn/{isbn}', [BookController::class, 'isbn']);
 
-
-//仮
-Route::get('/reports', [BookController::class, 'index'])
+Route::get('/reports', [ReportController::class, 'index'])
     ->middleware('auth')
     ->name('reports.index');
 
+
+//仮
 Route::get('/reading-plans', [BookController::class, 'index'])
     ->middleware('auth')
     ->name('reading-plans.index');
