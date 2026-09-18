@@ -50,7 +50,7 @@ class ReviewLikeSeeder extends Seeder
         $reviews = Review::all();
 
         foreach ($reviews as $review) {
-            $review->likedUsers()->syncWithoutDetaching(
+            $review->likedByUsers()->syncWithoutDetaching(
                 $reviewLikes[$review->id]
             );
         }
