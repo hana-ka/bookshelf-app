@@ -8,6 +8,7 @@ use App\Http\Controllers\ReviewLikeController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReadingPlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,16 +113,17 @@ Route::get('/reports', [ReportController::class, 'index'])
     ->middleware('auth')
     ->name('reports.index');
 
-
-//仮
-Route::get('/reading-plans', [BookController::class, 'index'])
+Route::get('/reading-plans', [ReadingPlanController::class, 'index'])
     ->middleware('auth')
     ->name('reading-plans.index');
 
+Route::get('/reading-plans/create', [ReadingPlanController::class, 'index'])
+    ->middleware('auth')
+    ->name('reading-plans.create');
+
+
+//仮
 Route::get('/notifications', [BookController::class, 'index'])
     ->middleware('auth')
     ->name('notifications.index');
 
-Route::get('/reading-plans', [BookController::class, 'index'])
-    ->middleware('auth')
-    ->name('reading-plans.index');
