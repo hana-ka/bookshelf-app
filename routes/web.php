@@ -32,6 +32,11 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', [BookController::class, 'index'])
     ->name('books.index');
 
+// Book Create
+Route::get('/books/create', [BookController::class, 'create'])
+    ->middleware('auth')
+    ->name('books.create');
+
 // Book Detail
 Route::get('/books/{book}', [BookController::class, 'show'])
     ->name('books.show');
@@ -57,9 +62,6 @@ Route::middleware('auth')->group(function () {
     | Books
     |--------------------------------------------------------------------------
     */
-
-    Route::get('/books/create', [BookController::class, 'create'])
-        ->name('books.create');
 
     Route::post('/books', [BookController::class, 'store'])
         ->name('books.store');

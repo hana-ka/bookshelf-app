@@ -68,6 +68,8 @@ class BookController extends Controller
 
     public function update(BookRequest $request, Book $book)
     {
+        $this->authorize('update', $book);
+
         $book->update([
             'title' => $request->title,
             'author' => $request->author,
@@ -80,11 +82,12 @@ class BookController extends Controller
         $book->genres()->sync($request->genres);
 
         return new BookResource($book);
-
     }
 
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
+
         $book->delete();
 
         return response()->json(null, 204);
