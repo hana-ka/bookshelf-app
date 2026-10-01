@@ -22,7 +22,7 @@ class SanctumAuthenticationTest extends TestCase
 
         $response = $this->withHeader(
             'Authorization',
-            'Bearer ' . $token
+            'Bearer '.$token
         )->postJson('/api/v1/books', [
             'title' => 'テスト書籍',
             'author' => 'テスト著者',
@@ -86,7 +86,7 @@ class SanctumAuthenticationTest extends TestCase
 
         $response = $this->withHeader(
             'Authorization',
-            'Bearer ' . $token
+            'Bearer '.$token
         )->getJson('/api/user');
 
         $response->assertStatus(200)
@@ -107,7 +107,7 @@ class SanctumAuthenticationTest extends TestCase
 
         $response = $this->withHeader(
             'Authorization',
-            'Bearer ' . $token
+            'Bearer '.$token
         )->postJson('/api/v1/books', [
             'title' => '認証ユーザーの書籍',
             'author' => 'テスト著者',

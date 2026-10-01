@@ -2,44 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\ReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-
 
 class ReviewController extends Controller
 {
-    public function store (ReviewRequest $request, Book $book)
-    {
+    /**
+     * Store a new review for the specified book.
+     */
+    public function store(
+        ReviewRequest $request,
+        Book $book
+    ): RedirectResponse {
         $book->reviews()->create([
             'user_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('books.show', $book) ->with('success', 'レビューを投稿しました。');
+        return redirect()
+            ->route('books.show', $book)
+            ->with('success', 'レビューを投稿しました。');
     }
 
-    public function edit(Review $review)
+    /**
+     * Show the form for editing the specified review.
+     */
+    public function edit(Review $review): View
     {
         $this->authorize('update', $review);
 
         return view('reviews.edit', compact('review'));
     }
 
-    public function destroy(Review $review)
+    /**
+     * Remove the specified review.
+     */
+    public function destroy(Review $review): RedirectResponse
     {
         $this->authorize('delete', $review);
 
         $review->delete();
 
-        return redirect()->route('books.show', $review->book)->with('success', 'レビューを削除しました。');
+        return redirect()
+            ->route('books.show', $review->book)
+            ->with('success', 'レビューを削除しました。');
     }
 
-    public function update(ReviewRequest $request, Review $review)
-    {
+    /**
+     * Update the specified review.
+     */
+    public function update(
+        ReviewRequest $request,
+        Review $review
+    ): RedirectResponse {
         $this->authorize('update', $review);
 
         $review->update([
@@ -47,7 +67,8 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('books.show', $review->book)->with('success', 'レビューを更新しました。');
-
+        return redirect()
+            ->route('books.show', $review->book)
+            ->with('success', 'レビューを更新しました。');
     }
 }

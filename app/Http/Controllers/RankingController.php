@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Book;
-
+use Illuminate\Contracts\View\View;
 
 class RankingController extends Controller
 {
-    public function index()
+    /**
+     * Display the top-rated books ranking.
+     */
+    public function index(): View
     {
         $rankedBooks = Book::withAvg('reviews', 'rating')
             ->withCount('reviews')

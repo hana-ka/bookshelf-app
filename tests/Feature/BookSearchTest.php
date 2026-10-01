@@ -63,7 +63,7 @@ class BookSearchTest extends TestCase
 
         $targetBook->genres()->attach($genre);
 
-        $response = $this->get('/?genre=' . $genre->id);
+        $response = $this->get('/?genre='.$genre->id);
 
         $response->assertStatus(200);
         $response->assertSee($targetBook->title);

@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
-use Carbon\Carbon;
 use App\Notifications\ReadingPlanReminder;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class ProcessReadingPlans extends Command
 {
@@ -57,7 +57,7 @@ class ProcessReadingPlans extends Command
                     ->where('data->timing', 'three_days_before')
                     ->exists();
 
-                if (!$alreadyNotified) {
+                if (! $alreadyNotified) {
                     $plan->user->notify(
                         new ReadingPlanReminder(
                             $plan,
@@ -75,7 +75,7 @@ class ProcessReadingPlans extends Command
                     ->where('data->timing', 'on_due_date')
                     ->exists();
 
-                if (!$alreadyNotified) {
+                if (! $alreadyNotified) {
                     $plan->user->notify(
                         new ReadingPlanReminder(
                             $plan,
@@ -93,7 +93,7 @@ class ProcessReadingPlans extends Command
                     ->where('data->timing', 'three_days_after')
                     ->exists();
 
-                if (!$alreadyNotified) {
+                if (! $alreadyNotified) {
                     $plan->user->notify(
                         new ReadingPlanReminder(
                             $plan,

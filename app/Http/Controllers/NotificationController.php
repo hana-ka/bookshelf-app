@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-
 
 class NotificationController extends Controller
 {
-    public function index()
+    /**
+     * Display the authenticated user's notifications.
+     */
+    public function index(): View
     {
         $notifications = Auth::user()->notifications;
 
         return view('notifications.index', compact('notifications'));
     }
 
-    public function read($id)
+    /**
+     * Mark the specified notification as read.
+     */
+    public function read(string $id): RedirectResponse
     {
         $notification = Auth::user()
             ->notifications()

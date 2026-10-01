@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReadingPlanController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
-use App\Http\Controllers\GenreController;
-use App\Http\Controllers\RankingController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ReadingPlanController;
-use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +48,6 @@ Route::get('/ranking', [RankingController::class, 'index'])
 // ISBN Search API
 Route::get('/books/isbn/{isbn}', [BookController::class, 'isbn']);
 
-
 /*
 |--------------------------------------------------------------------------
 | Authenticated Pages
@@ -75,7 +74,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy'])
         ->name('books.destroy');
 
-
     /*
     |--------------------------------------------------------------------------
     | Favorites
@@ -87,7 +85,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])
         ->name('favorites.toggle');
-
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +106,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
         ->name('reviews.like');
-
 
     /*
     |--------------------------------------------------------------------------
@@ -138,7 +134,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])
         ->name('genres.destroy');
 
-
     /*
     |--------------------------------------------------------------------------
     | My Reading Report
@@ -147,7 +142,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index'])
         ->name('reports.index');
-
 
     /*
     |--------------------------------------------------------------------------
@@ -186,6 +180,6 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.index');
 
     Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])
-    ->name('notifications.read');
+        ->name('notifications.read');
 
 });
