@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class BookController extends Controller
@@ -14,7 +18,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = Book::with('genres')
             ->withAvg('reviews', 'rating');
@@ -23,8 +27,8 @@ class BookController extends Controller
             $keyword = $request->keyword;
 
             $query->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', '%' . $keyword . '%')
-                    ->orWhere('author', 'like', '%' . $keyword . '%');
+                $q->where('title', 'like', '%'.$keyword.'%')
+                    ->orWhere('author', 'like', '%'.$keyword.'%');
             });
         }
 
@@ -43,8 +47,7 @@ class BookController extends Controller
         } elseif ($sort === 'title') {
             $query->orderBy('title', 'asc');
         } elseif ($sort === 'rating') {
-            $query->orderByRaw('reviews_avg_rating IS NULL')
-                ->orderBy('reviews_avg_rating', 'desc');
+            $query->orderBy('reviews_avg_rating', 'desc');
         }
 
         $books = $query->paginate(10)->withQueryString();
@@ -57,7 +60,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         $genres = Genre::all();
 
@@ -67,34 +70,40 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BookRequest $request)
+    public function store(BookRequest $request): RedirectResponse
     {
         $user = Auth::user();
 
-        $book = $user->books()->create([
-            'title' =>$request->title,
-            'author' => $request->author,
-            'isbn' => $request->isbn,
-            'published_date' => $request->published_date,
-            'description' => $request->description,
-            'image_url' => $request->image_url,
-        ]);
+        $book = DB::transaction(function () use ($user, $request) {
+            $book = $user->books()->create([
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'image_url' => $request->image_url,
+            ]);
 
-        $book->genres()->sync($request->genres);
+            $book->genres()->sync($request->genres);
 
-        return redirect()->route('books.show', $book)->with('success', '書籍を登録しました。');
+            return $book;
+        });
+
+        return redirect()
+            ->route('books.show', $book)
+            ->with('success', '書籍を登録しました。');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
-        $book ->load([
+        $book->load([
             'genres',
             'reviews.user',
-            'reviews.likedByUsers'
-            ]);
+            'reviews.likedByUsers',
+        ]);
 
         return view('books.show', compact('book'));
     }
@@ -102,7 +111,7 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(Book $book): View
     {
         $this->authorize('update', $book);
 
@@ -114,47 +123,60 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(BookRequest $request, Book $book)
-    {
+    public function update(
+        BookRequest $request,
+        Book $book
+    ): RedirectResponse {
         $this->authorize('update', $book);
 
-        $book->update([
-            'title' => $request->title,
-            'author' => $request->author,
-            'isbn' => $request->isbn,
-            'published_date' => $request->published_date,
-            'description' => $request->description,
-            'image_url' => $request->image_url,
-        ]);
+        DB::transaction(function () use ($request, $book) {
+            $book->update([
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'image_url' => $request->image_url,
+            ]);
 
-        $book->genres()->sync($request->genres);
+            $book->genres()->sync($request->genres);
+        });
 
-        return redirect()->route('books.show', $book)->with('success', '書籍情報を更新しました。');
+        return redirect()
+            ->route('books.show', $book)
+            ->with('success', '書籍情報を更新しました。');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
         $this->authorize('delete', $book);
 
         $book->delete();
 
-        return redirect()->route('books.index')->with('success', '書籍を削除しました。');
+        return redirect()
+            ->route('books.index')
+            ->with('success', '書籍を削除しました。');
     }
 
-
-    public function isbn($isbn)
+    /**
+     * Retrieve book information from Google Books API by ISBN.
+     */
+    public function isbn(string $isbn): JsonResponse
     {
-        $response = Http::get('https://www.googleapis.com/books/v1/volumes', [
-            'q' => 'isbn:' . $isbn,
-            'key' => env('GOOGLE_BOOKS_API_KEY'),
-        ]);
+        $response = Http::get(
+            'https://www.googleapis.com/books/v1/volumes',
+            [
+                'q' => 'isbn:'.$isbn,
+                'key' => env('GOOGLE_BOOKS_API_KEY'),
+            ]
+        );
 
         if ($response->failed()) {
             return response()->json([
-                'error' => '書籍情報の取得に失敗しました。'
+                'error' => '書籍情報の取得に失敗しました。',
             ], 500);
         }
 
@@ -162,7 +184,7 @@ class BookController extends Controller
 
         if (empty($data['items'])) {
             return response()->json([
-                'error' => '書籍が見つかりませんでした。'
+                'error' => '書籍が見つかりませんでした。',
             ], 404);
         }
 

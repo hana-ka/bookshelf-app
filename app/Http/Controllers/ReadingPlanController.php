@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ReadingPlan;
-use Illuminate\Support\Facades\Auth;
 use App\Enums\ReadingPlanStatus;
-use Carbon\Carbon;
-use App\Models\Book;
 use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
-
+use App\Models\Book;
+use App\Models\ReadingPlan;
+use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReadingPlanController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display the authenticated user's reading plans.
+     */
+    public function index(Request $request): View
     {
         $query = Auth::user()
             ->readingPlans()
@@ -34,15 +38,18 @@ class ReadingPlanController extends Controller
         ));
     }
 
-    public function complete(ReadingPlan $Plan)
+    /**
+     * Mark the specified reading plan as completed.
+     */
+    public function complete(ReadingPlan $plan): RedirectResponse
     {
-        abort_unless($Plan->user_id === Auth::id(), 403);
+        $this->authorize('update', $plan);
 
-        if ($Plan->status === ReadingPlanStatus::Completed) {
+        if ($plan->status === ReadingPlanStatus::Completed) {
             abort(403);
         }
 
-        $Plan->update([
+        $plan->update([
             'status' => ReadingPlanStatus::Completed,
             'completed_at' => Carbon::now(),
         ]);
@@ -50,14 +57,20 @@ class ReadingPlanController extends Controller
         return redirect()->route('reading-plans.index');
     }
 
-    public function create()
+    /**
+     * Show the form for creating a new reading plan.
+     */
+    public function create(): View
     {
         $books = Book::all();
 
         return view('reading-plans.create', compact('books'));
     }
 
-    public function store(StoreReadingPlanRequest $request)
+    /**
+     * Store a newly created reading plan.
+     */
+    public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
         ReadingPlan::create([
             'user_id' => Auth::id(),
@@ -68,12 +81,16 @@ class ReadingPlanController extends Controller
         ]);
 
         return redirect()->route('reading-plans.index');
-
     }
 
-    public function update(UpdateReadingPlanRequest $request, ReadingPlan $plan)
-    {
-        abort_unless($plan->user_id === Auth::id(), 403);
+    /**
+     * Update the target date of the specified reading plan.
+     */
+    public function update(
+        UpdateReadingPlanRequest $request,
+        ReadingPlan $plan
+    ): RedirectResponse {
+        $this->authorize('update', $plan);
 
         if ($plan->status === ReadingPlanStatus::Completed) {
             abort(403);
@@ -86,20 +103,28 @@ class ReadingPlanController extends Controller
         return redirect()->route('reading-plans.index');
     }
 
-    public function edit(ReadingPlan $plan)
+    /**
+     * Show the form for editing the specified reading plan.
+     */
+    public function edit(ReadingPlan $plan): View
     {
-        abort_unless($plan->user_id === Auth::id(), 403);
+        $this->authorize('update', $plan);
 
         if ($plan->status === ReadingPlanStatus::Completed) {
             abort(403);
         }
 
-        return view('reading-plans.edit', ['readingPlan' => $plan,]);
+        return view('reading-plans.edit', [
+            'readingPlan' => $plan,
+        ]);
     }
 
-    public function destroy(ReadingPlan $plan)
+    /**
+     * Remove the specified reading plan.
+     */
+    public function destroy(ReadingPlan $plan): RedirectResponse
     {
-        abort_unless($plan->user_id === Auth::id(), 403);
+        $this->authorize('delete', $plan);
 
         $plan->delete();
 

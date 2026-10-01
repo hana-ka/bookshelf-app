@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    public function index()
+    /**
+     * Display the authenticated user's reading report.
+     */
+    public function index(): View
     {
         $user = Auth::user();
 

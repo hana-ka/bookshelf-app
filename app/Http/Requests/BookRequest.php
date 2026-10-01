@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,35 +19,35 @@ class BookRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'title' =>[
+            'title' => [
                 'required',
                 'string',
                 'max:255',
             ],
-            'author' =>[
+            'author' => [
                 'required',
                 'string',
                 'max:255',
             ],
-            'isbn' =>[
+            'isbn' => [
                 'required',
                 'digits:13',
                 Rule::unique('books', 'isbn')->ignore($this->book),
             ],
-            'published_date' =>[
+            'published_date' => [
                 'required',
                 'date',
             ],
-            'description' =>[
+            'description' => [
                 'nullable',
                 'string',
             ],
-            'image_url' =>[
+            'image_url' => [
                 'nullable',
                 'url',
             ],
@@ -55,7 +56,7 @@ class BookRequest extends FormRequest
                 'array',
                 'min:1',
             ],
-            'genres.*' =>[
+            'genres.*' => [
                 'integer',
                 'exists:genres,id',
                 'distinct',
@@ -65,7 +66,7 @@ class BookRequest extends FormRequest
 
     public function messages(): array
     {
-        return[
+        return [
             'title.required' => 'タイトルを入力してください。',
             'title.string' => 'タイトルは文字列で入力してください。',
             'title.max' => 'タイトルは255文字以内で入力してください。',

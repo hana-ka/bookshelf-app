@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Book;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    public function toggle(Book $book)
+    /**
+     * Toggle the authenticated user's favorite status for the specified book.
+     */
+    public function toggle(Book $book): RedirectResponse
     {
         $user = Auth::user();
 
@@ -21,7 +25,10 @@ class FavoriteController extends Controller
         return redirect()->route('books.show', $book);
     }
 
-    public function index()
+    /**
+     * Display the authenticated user's favorite books.
+     */
+    public function index(): View
     {
         $user = Auth::user();
 

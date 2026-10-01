@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Book;
 use App\Models\Favorite;
-use App\Models\Genre;
 use App\Models\Review;
 use App\Models\ReviewLike;
 use App\Models\User;

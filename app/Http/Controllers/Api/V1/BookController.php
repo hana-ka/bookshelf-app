@@ -1,32 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Book;
-use App\Http\Resources\BookResource;
-use App\Http\Resources\BookDetailResource;
 use App\Http\Requests\Api\BookRequest;
+use App\Http\Resources\BookDetailResource;
+use App\Http\Resources\BookResource;
+use App\Models\Book;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
-
 
 class BookController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a paginated list of books.
+     */
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Book::with('genres')
             ->withAvg('reviews', 'rating')
             ->withCount('reviews');
 
-        if($request->filled('keyword')){
-            $query->where(function ($q) use ($request){
-                $q->where('title', 'like', '%'. $request->keyword .'%')->orWhere('author', 'like', '%' . $request->keyword .'%');
+        if ($request->filled('keyword')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('author', 'like', '%'.$request->keyword.'%');
             });
         }
 
-        if($request->filled('genre')){
-            $query->whereHas('genres', function ($q) use ($request){
+        if ($request->filled('genre')) {
+            $query->whereHas('genres', function ($q) use ($request) {
                 $q->where('genres.id', $request->genre);
             });
         }
@@ -36,7 +41,10 @@ class BookController extends Controller
         return BookResource::collection($books);
     }
 
-    public function show(Book $book)
+    /**
+     * Display the specified book.
+     */
+    public function show(Book $book): BookDetailResource
     {
         $book->load([
             'genres',
@@ -46,12 +54,15 @@ class BookController extends Controller
         return new BookDetailResource($book);
     }
 
-    public function store(BookRequest $request)
+    /**
+     * Store a newly created book.
+     */
+    public function store(BookRequest $request): JsonResponse
     {
         $user = Auth::user();
 
         $book = $user->books()->create([
-            'title' =>$request->title,
+            'title' => $request->title,
             'author' => $request->author,
             'isbn' => $request->isbn,
             'published_date' => $request->published_date,
@@ -66,8 +77,13 @@ class BookController extends Controller
             ->setStatusCode(201);
     }
 
-    public function update(BookRequest $request, Book $book)
-    {
+    /**
+     * Update the specified book.
+     */
+    public function update(
+        BookRequest $request,
+        Book $book
+    ): BookResource {
         $this->authorize('update', $book);
 
         $book->update([
@@ -84,7 +100,10 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function destroy(Book $book)
+    /**
+     * Remove the specified book.
+     */
+    public function destroy(Book $book): JsonResponse
     {
         $this->authorize('delete', $book);
 
